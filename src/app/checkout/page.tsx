@@ -34,6 +34,13 @@ export default function CheckoutPage() {
   const { cart } = useCart();
   const { success, error, warning } = useToast();
 
+  useEffect(() => {
+    router.prefetch('/dashboard/patient');
+    router.prefetch('/products');
+    router.prefetch('/login');
+    router.prefetch('/cart');
+  }, [router]);
+
   const [shippingAddress, setShippingAddress] = useState<Address>({
     id: 'addr_checkout',
     fullName: currentUser?.name || 'Ananya Verma',
@@ -237,20 +244,22 @@ export default function CheckoutPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3 pt-2">
-            <Button
-              variant="primary"
-              className="flex-1"
-              onClick={() => router.push('/dashboard/patient?tab=orders')}
-            >
-              View Order in Dashboard
-            </Button>
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => router.push('/products')}
-            >
-              Continue Shopping
-            </Button>
+            <Link href="/dashboard/patient?tab=orders" prefetch={true} className="flex-1">
+              <Button
+                variant="primary"
+                className="w-full"
+              >
+                View Order in Dashboard
+              </Button>
+            </Link>
+            <Link href="/products" prefetch={true} className="flex-1">
+              <Button
+                variant="outline"
+                className="w-full"
+              >
+                Continue Shopping
+              </Button>
+            </Link>
           </div>
         </div>
       </div>
@@ -261,9 +270,9 @@ export default function CheckoutPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
       {/* Breadcrumb */}
       <div className="flex items-center gap-2 text-xs text-slate-500 mb-6">
-        <Link href="/" className="hover:text-slate-800">Home</Link>
+        <Link href="/" prefetch={true} className="hover:text-slate-800">Home</Link>
         <ChevronRight className="w-3 h-3" />
-        <Link href="/cart" className="hover:text-slate-800">Cart</Link>
+        <Link href="/cart" prefetch={true} className="hover:text-slate-800">Cart</Link>
         <ChevronRight className="w-3 h-3" />
         <span className="text-slate-900 font-medium">Checkout</span>
       </div>

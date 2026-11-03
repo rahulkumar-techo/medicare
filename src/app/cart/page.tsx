@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import {
@@ -22,6 +22,11 @@ import { EmptyState } from '@/components/ui/EmptyState';
 export default function CartPage() {
   const router = useRouter();
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
+
+  useEffect(() => {
+    router.prefetch('/checkout');
+    router.prefetch('/products');
+  }, [router]);
 
   if (cart.items.length === 0) {
     return (
@@ -180,15 +185,16 @@ export default function CartPage() {
               </div>
             )}
 
-            <Button
-              variant="primary"
-              size="lg"
-              className="w-full"
-              onClick={() => router.push('/checkout')}
-            >
-              Proceed to Checkout
-              <ArrowRight className="w-4 h-4 ml-2" />
-            </Button>
+            <Link href="/checkout" prefetch={true} className="w-full block">
+              <Button
+                variant="primary"
+                size="lg"
+                className="w-full"
+              >
+                Proceed to Checkout
+                <ArrowRight className="w-4 h-4 ml-2" />
+              </Button>
+            </Link>
 
             <div className="flex items-center justify-center gap-2 text-xs text-slate-400">
               <ShieldCheck className="w-4 h-4 text-tealbrand-600" />

@@ -45,7 +45,9 @@ function ProductCatalogContent() {
 
   useEffect(() => {
     setCategories(ProductService.getCategories());
-  }, []);
+    router.prefetch('/cart');
+    router.prefetch('/checkout');
+  }, [router]);
 
   useEffect(() => {
     const list = ProductService.filterProducts({

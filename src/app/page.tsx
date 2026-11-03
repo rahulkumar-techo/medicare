@@ -40,7 +40,10 @@ export default function HomePage() {
   useEffect(() => {
     setDoctors(DoctorService.getActiveDoctors().slice(0, 4));
     setProducts(ProductService.getActiveProducts().slice(0, 4));
-  }, []);
+    router.prefetch('/doctors');
+    router.prefetch('/products');
+    router.prefetch('/cart');
+  }, [router]);
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -107,13 +110,13 @@ export default function HomePage() {
 
               {/* Quick Action CTAs */}
               <div className="flex flex-wrap items-center gap-4 pt-2">
-                <Link href="/doctors">
+                <Link href="/doctors" prefetch={true}>
                   <Button variant="primary" size="lg" className="shadow-lg shadow-brand-500/20">
                     <Calendar className="w-5 h-5 mr-2" />
                     Find a Doctor
                   </Button>
                 </Link>
-                <Link href="/products">
+                <Link href="/products" prefetch={true}>
                   <Button variant="outline" size="lg">
                     <ShoppingBag className="w-5 h-5 mr-2 text-tealbrand-600" />
                     Shop Essentials
@@ -246,7 +249,7 @@ export default function HomePage() {
               Select an available appointment slot for in-clinic visit or video consultation.
             </p>
           </div>
-          <Link href="/doctors">
+          <Link href="/doctors" prefetch={true}>
             <Button variant="outline" size="sm">
               Explore All 8 Doctors
             </Button>
@@ -327,7 +330,7 @@ export default function HomePage() {
               Clinically tested monitors, home diagnostics, and everyday wellness nutrition.
             </p>
           </div>
-          <Link href="/products">
+          <Link href="/products" prefetch={true}>
             <Button variant="outline" size="sm">
               View All 20+ Products
             </Button>

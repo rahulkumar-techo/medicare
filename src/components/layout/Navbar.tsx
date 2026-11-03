@@ -80,7 +80,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center gap-8">
-            <Link href="/" className="flex items-center gap-2.5 group">
+            <Link href="/" prefetch={true} className="flex items-center gap-2.5 group">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-700 to-tealbrand-500 flex items-center justify-center text-white shadow-md shadow-brand-500/20 group-hover:scale-105 transition">
                 <HeartPulse className="w-6 h-6" />
               </div>
@@ -102,6 +102,7 @@ export const Navbar: React.FC = () => {
                   <Link
                     key={link.href}
                     href={link.href}
+                    prefetch={true}
                     className={`px-3.5 py-2 rounded-lg text-sm font-medium transition ${
                       isActive
                         ? 'bg-brand-50 text-brand-700'
@@ -120,6 +121,7 @@ export const Navbar: React.FC = () => {
             {/* Cart Button */}
             <Link
               href="/cart"
+              prefetch={true}
               className="relative p-2.5 rounded-xl text-slate-600 hover:text-brand-600 hover:bg-slate-100 transition"
               aria-label="View shopping cart"
             >
@@ -238,6 +240,7 @@ export const Navbar: React.FC = () => {
                     <div className="py-1">
                       <Link
                         href={getDashboardLink()}
+                        prefetch={true}
                         onClick={() => setUserMenuOpen(false)}
                         className="flex items-center gap-2.5 px-4 py-2 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-slate-900"
                       >
@@ -285,12 +288,12 @@ export const Navbar: React.FC = () => {
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <Link href="/login">
+                <Link href="/login" prefetch={true}>
                   <Button variant="ghost" size="sm">
                     Log in
                   </Button>
                 </Link>
-                <Link href="/register">
+                <Link href="/register" prefetch={true}>
                   <Button variant="primary" size="sm">
                     Get Started
                   </Button>
@@ -317,6 +320,7 @@ export const Navbar: React.FC = () => {
             <Link
               key={link.href}
               href={link.href}
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 rounded-lg text-base font-medium text-slate-700 hover:bg-slate-50"
             >
@@ -326,6 +330,7 @@ export const Navbar: React.FC = () => {
           {isAuthenticated && (
             <Link
               href={getDashboardLink()}
+              prefetch={true}
               onClick={() => setMobileMenuOpen(false)}
               className="block px-3 py-2 rounded-lg text-base font-medium text-brand-600 bg-brand-50"
             >

@@ -43,7 +43,8 @@ function DoctorDirectoryContent() {
 
   useEffect(() => {
     setSpecializations(DoctorService.getSpecializations());
-  }, []);
+    router.prefetch('/cart');
+  }, [router]);
 
   useEffect(() => {
     const list = DoctorService.filterDoctors({

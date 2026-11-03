@@ -2,22 +2,45 @@ import { StorageAdapter } from './storage.interface';
 
 class LocalStorageAdapterImpl implements StorageAdapter {
   private memoryStore: Map<string, string> = new Map();
+  private cache: Map<string, unknown> = new Map();
   private subscribers: Map<string, Set<(newValue: unknown) => void>> = new Map();
 
   private isClient(): boolean {
     return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
   }
 
+  private clone<T>(val: T): T {
+    if (val === null || val === undefined) return val;
+    if (typeof structuredClone === 'function') {
+      return structuredClone(val);
+    }
+    return JSON.parse(JSON.stringify(val)) as T;
+  }
+
   getItem<T>(key: string, defaultValue: T): T {
+    if (this.cache.has(key)) {
+      return this.clone(this.cache.get(key) as T);
+    }
+
     try {
       if (this.isClient()) {
         const item = window.localStorage.getItem(key);
-        if (item === null) return defaultValue;
-        return JSON.parse(item) as T;
+        if (item === null) {
+          this.cache.set(key, this.clone(defaultValue));
+          return defaultValue;
+        }
+        const parsed = JSON.parse(item) as T;
+        this.cache.set(key, parsed);
+        return this.clone(parsed);
       } else {
         const item = this.memoryStore.get(key);
-        if (!item) return defaultValue;
-        return JSON.parse(item) as T;
+        if (!item) {
+          this.cache.set(key, this.clone(defaultValue));
+          return defaultValue;
+        }
+        const parsed = JSON.parse(item) as T;
+        this.cache.set(key, parsed);
+        return this.clone(parsed);
       }
     } catch (error) {
       console.warn(`[LocalStorageAdapter] Error reading key "${key}":`, error);
@@ -27,6 +50,7 @@ class LocalStorageAdapterImpl implements StorageAdapter {
 
   setItem<T>(key: string, value: T): boolean {
     try {
+      this.cache.set(key, this.clone(value));
       const serialized = JSON.stringify(value);
       if (this.isClient()) {
         window.localStorage.setItem(key, serialized);
@@ -43,6 +67,7 @@ class LocalStorageAdapterImpl implements StorageAdapter {
 
   removeItem(key: string): boolean {
     try {
+      this.cache.delete(key);
       if (this.isClient()) {
         window.localStorage.removeItem(key);
       } else {
@@ -58,6 +83,7 @@ class LocalStorageAdapterImpl implements StorageAdapter {
 
   clear(): boolean {
     try {
+      this.cache.clear();
       if (this.isClient()) {
         window.localStorage.clear();
       } else {
@@ -103,4 +129,3 @@ class LocalStorageAdapterImpl implements StorageAdapter {
 }
 
 export const localStorageAdapter = new LocalStorageAdapterImpl();
-
